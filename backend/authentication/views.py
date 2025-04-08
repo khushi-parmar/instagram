@@ -9,6 +9,11 @@ from .serializers import UserSerializer, LoginSerializer
 from .models import User
 from django.http import JsonResponse
 from rest_framework import status
+from rest_framework.response import Response
+# from mongoengine import get_db
+from authentication.models import User
+from django.http import FileResponse
+from rest_framework.response import Response
 
 
 load_dotenv()
@@ -38,7 +43,7 @@ def create_refresh_token(user):
     return token
 
 
-# SignUp View
+
 class SignUpView(APIView):
 
     permission_classes = [AllowAny]
@@ -47,24 +52,23 @@ class SignUpView(APIView):
 
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            email = serializer.validated_data["email"]
-            is_user_found = User.objects(email=email).first()
+            username = serializer.validated_data["username"]
+            is_user_found = User.objects(username=username).first()
             if is_user_found is not None:
                 return JsonResponse(
-                    {"message": "User already exists."},  # JSON data must be in a dictionary
+                    {"message": "User already exists."},  
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
             user = serializer.save()
-            # breakpoint()
             access_token = create_access_token(user)
             refresh_token = create_refresh_token(user)
 
             user_data = UserSerializer(user).data
 
-            print("user_data : ", user_data)
+            print("user_data : ", user_data) 
 
-            return JsonResponse(
+            return Response(
                 {
                     "message": "User created successfully.",
                     "data": {
@@ -73,29 +77,27 @@ class SignUpView(APIView):
                         "refresh_token": refresh_token,
                     }
                 },
-                # status=status.HTTP_201_CREATED  # HTTP 201 for "Created"
             )
-
+            
 
         return JsonResponse(
-            {"message": serializer.errors, "error": serializer.errors},  # Include error in response body
-            status=status.HTTP_400_BAD_REQUEST  # ✅ Use 'status' instead of 'status_code'
+            {"message": serializer.errors, "error": serializer.errors},  
+            status=status.HTTP_400_BAD_REQUEST  
         )
 
 
 
-# SignIn View
 class SignInView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
-            email = serializer.validated_data["email"]
+            username = serializer.validated_data["username"]
             password = serializer.validated_data["password"]
 
             # Check if user exists
-            user = User.objects(email=email).first()
+            user = User.objects(username=username).first()
             if user and user.check_password(password):
 
                 # Generate a token
@@ -106,7 +108,7 @@ class SignInView(APIView):
                 user_data = UserSerializer(user).data
                 return JsonResponse(
                     {"message":"Login successfully.",
-                    "user": user_data,  # Use serialized user data
+                    "user": user_data,  
                     "access_token": access_token,
                     "refresh_token": refresh_token,
                     },
@@ -117,7 +119,16 @@ class SignInView(APIView):
             )
         return JsonResponse(
             {"message":serializer.errors},
-            status=status.HTTP_400_BAD_REQUEST,
-            error=serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
         )
+
+
+def get_profile_pic(request, user_id):                      
+    user = User.objects.get(_id=user_id)
+    if user.profile_pic:
+        return FileResponse(user.profile_pic, content_type='image/jpeg')
+    return Response({"error": "No image found"}, status=404)
+
+
+
 

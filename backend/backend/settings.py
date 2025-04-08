@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'authentication'
+    'authentication',
+    'rest_framework_mongoengine'
 ]
 
 
@@ -144,7 +145,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REST_FRAMEWORK = {}
+REST_FRAMEWORK = {
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+}
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),  # Token valid for 1 day
@@ -152,3 +160,7 @@ SIMPLE_JWT = {
     "SIGNING_KEY": "6a8f9d2b1c4e7f0a3d6b5e9c2f1a8d3b7c4e5f6a9b2d0c1e8f3a7b6d5c2e9f0"  # Use Django's SECRET_KEY
 }
 print("SIMPLE_JWT done!")
+
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR , 'media/')
+
