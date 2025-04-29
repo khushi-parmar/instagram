@@ -1,5 +1,5 @@
 from rest_framework_mongoengine.serializers import DocumentSerializer
-from post.models import Post
+from post.models import Post,Like
 
 class PostSerializer(DocumentSerializer):
     class Meta:
@@ -18,5 +18,12 @@ class PostSerializer(DocumentSerializer):
             rep['image'] = None
         return rep 
     
+class LikeSerializer(DocumentSerializer):
+    class Meta:
+        model=Like
+        fields=["_id","post_id","whose_post","liked_by_whom","created_at"]
     
+    def create(self,validated_data):
+        like=Like.objects.create(**validated_data)
+        return like
     

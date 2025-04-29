@@ -17,7 +17,8 @@ class User(Document):
     last_name = StringField(max_length=50, required=True)
     email = EmailField(required=True)
     password = StringField(required=True)
-    profile_pic = FileField(blank=True, null=True)
+    profile_pic = FileField(required=False)
+    # image = FileField(required=False)
     created_at = DateTimeField(default=datetime.utcnow)
     updated_at = DateTimeField(default=datetime.utcnow)
     
@@ -28,4 +29,4 @@ class User(Document):
     # Check password
     def check_password(self, raw_password):
         return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
-
+       

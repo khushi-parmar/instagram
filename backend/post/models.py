@@ -14,4 +14,13 @@ class Post(Document):
     image=ImageField(required=True)
     caption=StringField(required=True)
     created_at = DateTimeField(default=datetime.utcnow)
+    like_by_whom= ReferenceField(User,blank=True)
     
+class Like(Document):
+    _id = StringField(default=lambda: str(uuid.uuid4()),primary_key = True)
+    post_id=ReferenceField(Post)
+    whose_post= ReferenceField(Post)
+    liked_by_whom=ReferenceField(User)
+    created_at = DateTimeField(default=datetime.utcnow)
+    status= StringField(default="liked")
+
