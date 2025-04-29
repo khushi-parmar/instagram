@@ -4,9 +4,8 @@ from post.serializers import PostSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from backend.decorators import jwt_required
-from post.models import Post,Like,User
+from post.models import Post,User
 from django.http import FileResponse
-from rest_framework.response import Response
 from user_details.models import Follow
 
 # Create your views here.
