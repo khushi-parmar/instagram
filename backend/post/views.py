@@ -73,27 +73,6 @@ def retrieve_single_post(request,post_id):
     serializer=PostSerializer(post)
     return Response({"post":serializer.data},status=status.HTTP_200_OK)
 
-# @api_view(["POST"]) 
-# @jwt_required 
-# def like_post(request,post_id):
-#     # likes=Like.object.filter(post_id=post_id,whose_post=)
-#     like=Like.objects.get()
-#     # user=User.objects.get() 
-#     post=Post.objects.filter(_id=post_id)
-#     data=request.data
-#     like.post_id= data["post_id"]
-#     like.whose_post= post.user_id
-#     like.liked_by_whom= data["user_id"]
-    
-#     return Response({"messagae":"you liked"})
 
-
-
-# create post 
-# delete Post
-# like post if already in database then delete else status like 
-# want to see user profile
-# want to see any post 
-# do comment on any post you can do more then one comment 
 
 
